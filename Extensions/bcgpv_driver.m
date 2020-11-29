@@ -180,25 +180,39 @@ FV = kscdf(v_bc, 'edf', evalpts);
 
 if simulind == 1
     b = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    prob = rand(1000, 10);
-    N = 16;
+    N = 2;
     
     
     
     for i = 1:1000
         for j = 1:10 
-            idx = find(prob(i, j) == FV);
             
-            if isempty(idx) 
-                [minValue, closestIdx] = min(abs(FV - prob(i, j))); 
-                cost = evalpts(closestIdx);
-                fprintf('%d %d\n', i, j)
-                b(j) = b(j) + cost + ... 
-                    trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^N;
-            else 
-                cost = mean(evalpts(idx));
-                b(j) = b(j) + cost + ... 
-                    trapz(evalpts(idx(1):end), 1-FV(idx(1):end)) / (1-prob(i, j))^N;
+            while true 
+                rand_number = rand;
+                idx = find(rand_number == FV);
+            
+                if isempty(idx) 
+                    [minValue, closestIdx] = min(abs(FV - rand_number)); 
+                    cost = evalpts(closestIdx);
+                    
+                    if length(FV(closestIdx:end)) < 2 % need at least two points to evaluate integral 
+                        continue 
+                    end 
+                
+                    b(j) = b(j) + cost + ... 
+                        trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^N;
+                else 
+                    cost = mean(evalpts(idx));
+                    
+                    if length(FV(idx(1):end)) < 2 % need at least two points to evaluate integral 
+                        continue 
+                    end 
+                    
+                    b(j) = b(j) + cost + ... 
+                        trapz(evalpts(idx(1):end), 1-FV(idx(1):end)) / (1-prob(i, j))^N;
+                end 
+                
+                break
             end 
         end 
     end 
