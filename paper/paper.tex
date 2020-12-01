@@ -24,8 +24,10 @@
     \large Testing GPV Method in First-Price Reverse Auctions}
 
 \author{Qingbo Liu\\[0.5cm]{\small Advisor: Timothy P. Hubbard}}
+\date{Nov 30, 2020}
 
 % \doublespacing
+\onehalfspacing
 \begin{document}
 \maketitle
 
@@ -77,63 +79,60 @@ valuations and preferences into bids, and the usual economic approach is to cons
 the bids as a mathematical function of valuations and preferences, an approach which 
 this paper will take. At the end of auctions, the winner(s) 
 is designated based on certain auction rules and the auction data becomes available.
-The data includes only bids, the final output of bidding function, and the inputs, 
-valuations and preferneces, remain unknown. Yet many interesting and useful analysis 
-of auctions entails the konwledge about valuations and preferences. For example, 
+The data includes only bids, the final output of the bidding function, and the inputs, 
+valuations and preferences, remain unknown. Yet interesting and useful analysis 
+of auctions entails the knowledge about valuations and preferences. For example, 
 to evaluate the performance of auctions, it is necessary to have access to bidder's 
 valuations to determine if the particular mechanism has achieved its objective,
 which leads to structural estimation. 
 
 Structural estimation assumes a particular model and uses statistical methods to 
 estimate relevant parameters of the model. The calibrated model can then 
-give predictions regarding objects that are beging investigated. For example, 
+give predictions regarding objects that are being investigated. For example, 
 in first-price sealed-bid reverse auctions, 
 one of the mechanisms that the government uses for public project procurements, 
 the simple assumption is that all participants independently draw costs from an 
 identical cost distribution. 
 Each bidder submits a sealed bid to the auctioneer and after all bidders have finished 
-submission the winner is the one with lowest bid. With this bidding model, 
+submission the winner is the one with the lowest bid. With this bidding model, 
 structural estimation can be used 
 to infer the cost distribution based on observed bids \cite{Guerreetal2000}.
 Compared to regression analysis, structural estimation imposes a stringer set of 
-assumptions on the data. But more than just discovering correlation between variables 
-as regression analysis does, structural estimation is able to produce stronger 
+assumptions on the data. But more than just discovering the correlation between 
+variables as regression analysis does, structural estimation is able to produce stronger 
 counter-factual predictions, such as the cost distribution as mentioned above. 
 
 The central assumption underlying structural estimation is that the model used 
-is correct in the particular environment. To overcome such a draback, alternative 
+is correct in a particular environment. To overcome such a drawback, alternative 
 studies such as lab experiments are used to confirm the theory's validity. But 
 laboratory environments ultimately differ from the real environments and 
 the conclusions from laboratory studies may not hold in more realistic environments. 
-This goal of this paper is to test model validity in a new different way by 
+The goal of this paper is to test model validity in a new different way by 
 borrowing the techniques from statistical learning literature. In statistical 
 learning, multiple models for predictive purposes are trained on part of the dataset 
 and their performance is evaluated on another reserved split of 
 the available dataset. The technique is called cross-validation 
 and is used when there are candidate models and their performance needs to 
-be compared to select the most fit one. In this paper, I will adapt the idea 
-of cross-validation to test the predictiveness of economic models. By spliting 
+be compared to select the fittest one. In this paper, I will adapt the idea 
+of cross-validation to test the predictiveness of economic models. By splitting 
 data into training data and test data as in statistical learning, I will 
 run structural estimation on the training data, simulate test data using the 
-results from strucutral estimation and compare the simulated data to actual 
+results from strucutral estimation, and compare the simulated data to actual 
 test data. If the difference is statistically significant, that suggests 
 unfitness of the model in the particular environment. 
 In this paper, I will use data from government procurement auctions to test 
-first-price sealed-bid equilibrium model \cite{RileySamuelson1981} 
+the first-price sealed-bid equilibrium model \cite{RileySamuelson1981} 
 for structural estimation
 \footnote{The original goal of this paper also includes comparing the cost 
-distribution of DBE/MBE/WBE (standing respectly for Disadvantaged/Minority/Woman
+distribution of DBE/MBE/WBE (standing respectively for Disadvantaged/Minority/Woman
 Business Enterprise) to the cost distribution of other firms, which will add 
 to the existing literature on understanding how DBE/MBE/WBE perform relative 
 to other firms. But due to data availability on these types of firms 
-and time constraint on the project as this is a 
+and time constraints on the project as this is a 
 term paper, this goal is omitted. }.
 
-% TODO: mention FPSB is the environment we are interested in 
-% TODO: also mention why we want the cost distribution: MDB/WDB business 
-
-The remainders of the paper are organized as follows. Section 2 discusses the 
-characteristics of the environemnt and derives the model for structural 
+The remainder of the paper is organized as follows. Section 2 discusses the 
+characteristics of the environment and derives the model for structural 
 estimation. Section 3 examines the data and presents estimation results. 
 Section 4 runs simulations based on estimation. Section 5 concludes with 
 a discussion on the results and possible improvements. 
@@ -142,8 +141,8 @@ a discussion on the results and possible improvements.
 
 For the model setup, suppose there are $n$ bidders in the auction, with 
 $n \geq 2$, and 
-there is a single, indivisible object being auctioned.. Each bidder submits 
-a sealed bid based on the an observed cost before the auciton. The 
+there is a single, indivisible object being auctioned. Each bidder submits 
+a sealed bid based on an observed cost before the auction. The 
 bidder's cost $c$ is drawn i.i.d from a common distribution $F(\cdot)$ which is 
 continuous with density $f(\cdot)$ on the support $[\underline{c}, \overline{c}] \subset \mathbb{R}^{+}$. 
 All bidders are quasi-linear utility-maximizers, with the utility function 
@@ -154,7 +153,7 @@ private cost $c_i$ and no one else's.
 
 Different from first-price sealed-bid auctions where 
 the highest bidder wins, in first-price sealed-bid reverse 
-auctions the winner is picked as the one who submits the 
+auctions the winner is the one who submits the 
 lowest bid. In the following subsection, I will derive the 
 Bayes-Nash Equilibrium in the FPSB reverse auction environment.
 After I have characterized the equilibrium, now I will proceed to describe how 
@@ -165,7 +164,7 @@ For bidder $i$ in the auction, she needs to report a bid $b_i$ based on
 her private cost $c_i$. The bidder achieves maximal utility 
 by maximizing the function 
 $$ \max_{b_i} (b_i - c_i)P(\text{win}|b_i), $$ 
-which is saying by picking an approriate bid $b_i$, the bidder 
+which is saying by picking an appropriate bid $b_i$, the bidder 
 has a good balance between the revenue and probability of winning. 
 
 Since this is a first-price reverse auction, where the lowest bidder wins, 
@@ -225,9 +224,9 @@ $f(c_i)/(1-F(c_i))(1/s'(c_i))$. From this, equation (\ref{eqn:BiddingDiffQ}) bec
 \end{equation}
 
 In an environment of $n$ bidders, Equation (\ref{eqn:ReverseFunction}) provides 
-the method to estimate psuedo-costs from observed bids with kernel-estimated 
-bid density and bid distribution. The estimated costs are psuedo because of  
-assumptions that bidders are risk-neutral and play Bayes-Nash equilibrium bidding 
+the method to estimate pseudo-costs from observed bids with kernel-estimated 
+bid density and bid distribution. The estimated costs are pseudo because of  
+assumptions that bidders are risk-neutral and play a Bayes-Nash equilibrium bidding 
 strategy. 
 
 \subsection{Estimation}
@@ -251,30 +250,29 @@ and
 where I have a set of observables ${x_1, x_2, ... x_n}$. However, this  
 kernel density estimation (\ref{eqn:KDE_f}) 
 method suffers from boundary 
-problem and instead I will use the boundary-corrected kernel estimation 
+problem and instead, I will use the boundary-corrected kernel estimation 
 method as proposed in \cite{HickmanHubbard2015}
 
 This two-step estimation method has the advantage that in order to estimate cost 
 distribution with observed bids, I do not need to assume a prior distribution 
-of $f(c)$ in order to estimate it (which is a parametric method that works by 
+of $f(c)$ to estimate it (which is a parametric method that works by 
 first assuming the shape of a distribution and then estimating parameters of the 
 distribution from data). 
 
 
 \section{Data and Results}
 The bidding data used in this paper is downloaded from the Colorado Department of 
-Transportation (https://www.codot.gov/business/bidding). I wil take a short detour of the data itself before 
+Transportation (https://www.codot.gov/business/bidding). I will take a short detour of the data itself before 
 presenting results on cost estimation. 
 
 \subsection{Data Description}
 \begin{table}[h!]
     \centering
     \begin{tabular}{|l|l|l|l|l|l|}
-        
     \hline
                                        & Mean         & Median       & \begin{tabular}[c]{@{}l@{}}Standard\\ Deviation\end{tabular} & Max           & Min  \\ \hline
         Total Bid                      & 3,172,164.68 & 1,366,571.20 & 5,491,805.02                                                 & 93,398,000.00 & 0.00 \\ \hline
-        \begin{tabular}[c]{@{}l@{}}Percent of Enginner's\\ Estimate (Cost)\end{tabular} & 106.54       & 100.02       & 22.63                                                        & 750.00        & 0.00 \\ \hline
+        \begin{tabular}[c]{@{}l@{}}Percent of Engineer's\\ Estimate (Cost)\end{tabular} & 106.54       & 100.02       & 22.63                                                        & 750.00        & 0.00 \\ \hline
         Number of Bidders              & 5.47         & 5            & 2.5                                                          & 16            & 1    \\ \hline
 \end{tabular}
 \caption{Basic summary statistics of data}
@@ -282,8 +280,8 @@ presenting results on cost estimation.
 \end{table}
 
 There are in total 1182 auctions in the data. For each auction, I have 
-the number of participants $n$, bids submitted by participants and engineer's 
-estimate. The summary statistics of data is summarized in Table \ref{table:1}. 
+the number of participants $n$, bids submitted by participants and the engineer's 
+estimate. The summary statistics of the data are summarized in Table \ref{table:1}. 
 Projects vary from each other in their sizes, types, and many other factors. 
 Even the same type of projects will have different costs. As Table \ref{table:1}
 shows, the variance in Total Bid is very large and not an ideal candidate for 
@@ -301,9 +299,9 @@ across projects.
 \end{figure}
 
 Figure \ref{fig:BidFrequency} plots the frequency of normalized bids. Most bids 
-are centered around $110\%$, which is slightly higher than engineer's estimate 
+are centered around $110\%$, which is slightly higher than the engineer's estimate 
 with respect to which bids are normalized.
-However, there are some outliers located \textit{More} bins, 
+However, there are some outliers located in the \textit{More} bin, 
 which would cause numeric instability in estimation. 
 For data that is More bins, the kernel-estimated bid distribution 
 $G_B(\cdot)$ is close to $1$ and so $1-G_B(\cdot)$ close to 0. As in 
@@ -320,11 +318,11 @@ of this paper. For simplicity, therefore, I will first use equation
 (\ref{eqn:ReverseFunction}) to estimate costs and then trim the negative costs.
 
 \subsection{Results}
-With data comprised of auctions that have different number of participants, 
+With data comprised of auctions that have a different number of participants, 
 the general estimation procedure remains the same. But the equation 
-(\ref{eqn:ReverseFunction}) that assumes a fixed $n$ for number 
+(\ref{eqn:ReverseFunction}) that assumes a fixed $n$ for the number 
 of participants is modified to 
-accomodate varying $n$ \cite{Matthewetal2018}
+accommodate varying $n$ \cite{Matthewetal2018}
 \begin{equation}
     c_{in} = b_{in} - \frac{1}{n-1} \cdot \frac{g(b_{in}|N = n)}{1-G_{B}(b_{in}|N=n)},
     \label{eqn:ReverseFunction_N}
@@ -337,24 +335,24 @@ each $n$ in the dataset.
 \begin{figure}[h]
     \includegraphics[width=0.75\textwidth]{cost_bid.jpg}
     \centering
-    \caption{Estimated cost plotted against bid.}
+    \caption{Estimated costs plotted against bids.}
    
     \label{fig:cost_bid}
 \end{figure}
 
 Figure \ref{fig:cost_bid} plots the estimated cost against bids in the plot. 
 The relationship between costs and bids is almost linear, suggesting that for 
-each bid, the inferred cost is very close in terms of numeric value. This is so 
+each bid, the inferred cost is very close in terms of numeric values. This is so 
 mainly due to the bid distribution. As shown in Figure \ref{fig:BidFrequency}, 
 most of the bids are spread in the range [70, 200], which means that for each 
 bid $b$, the estimated density value at the specific bid value, $f_c(b)$, is 
 small: the peak of $f_c(\cdot)$ being $0.0222$. A closer look at the bid 
-distributions of auctions with different number of participants, $n$, reveals 
+distributions of auctions with a different number of participants, $n$, reveals 
 that the majority of auction data with small $n$, where the competition is less 
 fierce and bidders are able to have a larger markup over the costs than those 
 having more competitors, bids are mostly distributed around $110\%$. The 
-auctions that more spread-out data, however, have large $n$. 
-
+auctions that more spread-out data, however, have large $n$, in which case 
+the markup over costs is decreased due to the competition.  
 
 \begin{figure}[h]
 \centering
@@ -371,13 +369,16 @@ auctions that more spread-out data, however, have large $n$.
 \end{figure}
 
 Figure \ref{fig:CostEstimation} shows the kernel-estimated density and 
-distribution of psuedo-costs. Because psuedo-costs are close to corresponding 
+distribution of pseudo-costs. Because pseudo-costs are close to corresponding 
 bids, the density figure on the left of Figure \ref{fig:CostEstimation} is very 
 similar to the histogram of bids, Figure \ref{fig:BidFrequency}. As both plots in 
 Figure \ref{fig:CostEstimation} show, the inferred costs also center around 
 the range [70, 200].
 
-\section{Simulation}
+\section[title]{Simulation 
+\footnote{This paper is still a work in progress and I am investigating the 
+reason why the result is so. For the latest version on this section, please 
+see \url{https://github.com/QuRyu/CDOT/blob/main/paper/paper.pdf }} } 
 To test if the estimated cost distribution captures the underlying cost 
 distribution that drives observed bids, I will proceed to the second step 
 of the adapted cross-validation: simulate bids using estimated cost distribution 
@@ -386,12 +387,12 @@ I will use an auction from the dataset which has 16 bidders. The data is not use
 to estimate the cost distribution because the total number of bids with 
 $16$ bidders is less than $32$. 
 
-The simulation technique is known as inversion method and runs as follows.
+The simulation technique is known as the inversion method and runs as follows.
 I will draw 16 random numbers uniformly 
 distributed on the range $(0 ,1)$ and use the inverse distribution function, 
 $F_c^{-1}(\cdot)$ to find the corresponding costs. The bids are then computed 
 using equation (\ref{eqn:BiddingFunction}) and the estimated cost distribution 
-$F_c$. This process is repeated for 1000 times and the averages are taken. 
+$F_c$. This process is repeated 1000 times and the averages are taken. 
 
 \begin{table}
     \begin{tabular}{llllll}
@@ -405,16 +406,15 @@ $F_c$. This process is repeated for 1000 times and the averages are taken.
 \end{table}
 
 Table \ref{table:2} summarizes the test data and simulated bids, respectively. The 
-anamoly of the simulated data comes from the fact the 15th power of $1-F_c(c)$, a
+anomaly of the simulated data comes from the fact the 15th power of $1-F_c(c)$, a
 number that is less than 1, is tiny and so $\frac{1}{1-F_c(c)}$ is large,
-inflating the reuslt by an astronomical magnitude
-\footnote{This paper is still a work in progress and I am investigating the 
-reason why the result is so. More updates later}. 
+inflating the result by an astronomical magnitude.
+
 
 \section{Conclusion}
 This paper tries to propose a way to validate models used in structural analysis 
-by cross-validation. The dataset is split into training dataset and test 
-dataset.
+by cross-validation. The dataset is split into training data and test 
+data.
 First, this paper has conducted structural estimation on a government 
 procurement auction dataset about highway constructions and estimated the 
 cost distribution on the training data using a two-step nonparametric procedure.
@@ -422,20 +422,20 @@ Second, using the
 estimated cost distribution, the paper then constructs simulated bids with the 
 inversion method and compare the simulation to test data. 
 (Even though there are no meaningful results yet, it is very likely that 
-the two will have statistically significant differnece). 
+the two will have statistically significant differences). 
 The statistical difference between the simulation and test data suggests that 
 the first-price sealed-bid equilibrium model introduced in \citeauthor{RileySamuelson1981} 
 \citeyear{RileySamuelson1981} may not be a suitable model to predict bidder's 
 behavior in real-world auctions. 
 
-However, in the second step of the cross-validation procedure, comparsing bids 
+However, in the second step of the cross-validation procedure, comparing bids 
 directly to test theory's validity may not be a good idea, as suggested in 
 \citeauthor{Harrison1989} \citeyear{Harrison1989}. \citeauthor{Harrison1989}
 \citeyear{Harrison1989} instead proposes to "evaluate subject behavior in the 
-expected payoff space". This can be incorporated into the project's future work.
+expected payoff space", which can be incorporated into the project's future work.
 
 The idea of cross-validation has been an old idea in the machine learning 
-literature as a way to compare performance across models. I therefore consider 
+literature as a way to compare performance across models. I, therefore, consider 
 it a natural idea to introduce it into structural analysis. Structural estimation 
 relies on the model's correctness in modeling agent's behavior, but the verification 
 of models is left to lab experiments, not empirical data which holds the final 
