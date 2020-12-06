@@ -130,6 +130,11 @@ to other firms. But due to data availability on these types of firms
 and time constraints on the project as this is a 
 term paper, this goal is omitted. }.
 
+Similar work has been done in \citeauthor{ChernomazYushioto2019} 
+\citeyear{ChernomazYushioto2019}, where they have compared the accuracy 
+of semiparametric and nonparametric structural estimation methods in an 
+asymetric environment.  
+
 The remainder of the paper is organized as follows. Section 2 discusses the 
 characteristics of the environment and derives the model for structural 
 estimation. Section 3 examines the data and presents estimation results. 
@@ -290,7 +295,7 @@ by Engineer's Estimate, which is also known as normalized bids.
 Inferred cost distribution constructed this way will be invariant 
 across projects. 
 
-\begin{figure}[h]
+\begin{figure}
     \includegraphics[width=0.8\textwidth]{BidFrequency.png}
     \centering
     \caption{Frequency of normalized bids (bids divided by engineer's estimate)}
@@ -313,7 +318,7 @@ The boundary-correction technique introduced in \cite{HickmanHubbard2015}
 applies only to the kernel density estimation, not kernel 
 distribution estimation, and overcoming 
 the boundary problems in kernel distribution estimation is outside the scope 
-of this paper. For simplicity, therefore, I will first use equation 
+of this paper. For simplicity, I will first use equation 
 (\ref{eqn:ReverseFunction}) to estimate costs and then trim the negative costs.
 
 \subsection{Results}
@@ -328,32 +333,29 @@ accommodate varying $n$ \cite{Matthewetal2018}
 \end{equation}
 where $c_{in}$ and $b_{in}$ refer to the cost and bid in $i$-th auction 
 with $n$ participants, and the density $g(\cdot|N=n)$ and distribution
-$G(\cdot|N=n)$ are estimated on auction data with $n$ participants for 
-each $n$ in the dataset. 
+$G(\cdot|N=n)$ are estimated on auction data with $n$ participants. 
 
-\begin{figure}[h]
+\begin{figure}
     \includegraphics[width=0.75\textwidth]{cost_bid.jpg}
     \centering
     \caption{Estimated costs plotted against bids.}
-   
     \label{fig:cost_bid}
 \end{figure}
 
 Figure \ref{fig:cost_bid} plots the estimated cost against bids in the plot. 
-The relationship between costs and bids is almost linear, suggesting that for 
-each bid, the inferred cost is very close in terms of numeric values. This is so 
+Bidder's markup over costs is infinitesimal. This is so 
 mainly due to the bid distribution. As shown in Figure \ref{fig:BidFrequency}, 
-most of the bids are spread in the range [70, 200], which means that for each 
+most of the bids are scattered in the range [70, 200], which means that for each 
 bid $b$, the estimated density value at the specific bid value, $f_c(b)$, is 
 small: the peak of $f_c(\cdot)$ being $0.0222$. A closer look at the bid 
 distributions of auctions with a different number of participants, $n$, reveals 
 that the majority of auction data with small $n$, where the competition is less 
 fierce and bidders are able to have a larger markup over the costs than those 
-having more competitors, bids are mostly distributed around $110\%$. The 
-auctions that more spread-out data, however, have large $n$, in which case 
-the markup over costs is decreased due to the competition.  
+having more competitors, has bids compressed around $110\%$. The fact 
+that bids and costs are very close also suggests that the auctions are 
+very efficient in helping the Colorado government save money. 
 
-\begin{figure}[h]
+\begin{figure}
 \centering
     \begin{minipage}[h]{0.5\textwidth}
         \centering
@@ -372,7 +374,10 @@ distribution of pseudo-costs. Because pseudo-costs are close to corresponding
 bids, the density figure on the left of Figure \ref{fig:CostEstimation} is very 
 similar to the histogram of bids, Figure \ref{fig:BidFrequency}. As both plots in 
 Figure \ref{fig:CostEstimation} show, the inferred costs also center around 
-the range [70, 200].
+the range $[70, 200]$. As the density outside the range[70, 200] is very slim, 
+the implication will be that simulation based on this cost distribution will not 
+be very accurate in generating values outside the range, which partially 
+decreases the predictive power of the model. 
 
 \section[title]{Simulation} 
 To test if the estimated cost distribution captures the underlying cost 
@@ -444,32 +449,31 @@ to the the bid distribution depicted in Figure \ref{fig:BidFrequency}, and
 (2) I am comparing most likely bids predicted by the estimated cost distribution 
 to a particular auction. Therefore, the difference here not suggest the 
 inaccuracy of the estimated cost distribution or the equilibrium model. 
-Instead, this exercise suggests that we may need to increase the sample size 
-to have a more informative comparison. 
-
+Instead, this exercise suggests that a larger test dataset is needed 
+to deliver more informative results. 
 
 \section{Conclusion}
 This paper tries to propose a way to validate models used in structural analysis 
 by cross-validation. The dataset is split into training data and test 
 data.
-First, this paper has conducted structural estimation on a government 
-procurement auction dataset about highway constructions and estimated the 
+First, this paper conducts structural estimation on a government 
+procurement auction dataset about highway constructions and estimates the 
 cost distribution on the training data using a two-step nonparametric procedure.
 Second, using the 
 estimated cost distribution, the paper then constructs simulated bids with the 
 inversion method and compare the simulation to test data. 
-(Even though there are no meaningful results yet, it is very likely that 
-the two will have statistically significant differences). 
-The statistical difference between the simulation and test data suggests that 
-the first-price sealed-bid equilibrium model introduced in \citeauthor{RileySamuelson1981} 
-\citeyear{RileySamuelson1981} may not be a suitable model to predict bidder's 
-behavior in real-world auctions. 
+But the wide difference between the simulation and test data does not suggests
+that the first-price sealed-bid equilibrium model introduced in 
+\citeauthor{RileySamuelson1981} \citeyear{RileySamuelson1981}
+is not a suitable model to predict bidder's 
+behavior in real-world auctions. Instead, to draw a firm concludesion requires 
+more data. 
 
-However, in the second step of the cross-validation procedure, comparing bids 
+Moreover, in the second step of the cross-validation procedure, comparing bids 
 directly to test theory's validity may not be a good idea, as suggested in 
 \citeauthor{Harrison1989} \citeyear{Harrison1989}. \citeauthor{Harrison1989}
 \citeyear{Harrison1989} instead proposes to "evaluate subject behavior in the 
-expected payoff space", which can be incorporated into the project's future work.
+expected payoff space", which can be incorporated into future work of the project.
 
 The idea of cross-validation has been an old idea in the machine learning 
 literature as a way to compare performance across models. I, therefore, consider 
