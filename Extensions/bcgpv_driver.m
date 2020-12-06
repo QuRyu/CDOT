@@ -24,7 +24,7 @@ set(0,'defaulttextinterpreter','latex','Defaulttextfontsize',fsize);
 % N = 2;
 % bmax = max(b);
 % bmin = min(b);
-% b = sort(b);
+% b = sort(b);f
 
 % use hardle bandwidth transformation constant for non-gaussian kernel
 usehardle = 1;
@@ -136,7 +136,16 @@ fV_bc(vind) = fV_bc_right(vind);
 
 FV = kscdf(v_bc, 'edf', evalpts);
   
-if plotind == 1
+if plotind == 1 
+    % bid histogram 
+    figure 
+    set(gcf,'DefaultLineLineWidth',lwidth)
+    set(gca,'FontSize',fsize)
+    hist(data.PercentOfEstimates, 0:10:200)
+    xlabel('$\mathbf{b}$')
+    ylabel('Frequency')
+    box on 
+    
     % scatter plot of bid function
     figure
     set(gcf,'DefaultLineLineWidth',lwidth)
@@ -174,18 +183,18 @@ if plotind == 1
     box on
 end
 
-
 evalpts = linspace(min(v_bc), max(v_bc), max(v_bc)-min(v_bc));
 FV = kscdf(v_bc, 'edf', evalpts);
 
 if simulind == 1
-    b = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    N = 2;
+    N = 16;
+    b = zeros(N, 1);
+    c = zeros(N, 1);
     
+    run = 10;
     
-    
-    for i = 1:1000
-        for j = 1:10 
+    for i = 1:run
+        for j = 1:N 
             
             while true 
                 rand_number = rand;
@@ -200,7 +209,7 @@ if simulind == 1
                     end 
                 
                     b(j) = b(j) + cost + ... 
-                        trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^N;
+                        trapz(evalpts(closestIdx:end), (1-FV(closestIdx:end)).^(N-1)) / (1-FV(closestIdx))^(N-1);
                 else 
                     cost = mean(evalpts(idx));
                     
@@ -209,13 +218,37 @@ if simulind == 1
                     end 
                     
                     b(j) = b(j) + cost + ... 
-                        trapz(evalpts(idx(1):end), 1-FV(idx(1):end)) / (1-prob(i, j))^N;
+                        trapz(evalpts(idx(1):end), (1-FV(idx(1):end)).^(N-1)) / (1-prob(i, j))^(N-1);
                 end 
+                
+                c(j) = c(j) + cost; 
                 
                 break
             end 
         end 
     end 
     
-    b = b ./ 1000;
+    b = b ./ run;
+    c = c ./ run;
+    b16 = data(find(data.ParticipantsCount == 16), :);
+    b16 = sort(b16.PercentOfEstimates);
+    
+    figure 
+    set(gcf,'DefaultLineLineWidth',lwidth)
+    set(gca,'FontSize',fsize)
+    scatter(c, b,'*b')
+    xlabel('$\mathbf{c}$')
+	ylabel('$\mathbf{\hat{b}}$')
+    box on
+    
+    b = sort(b);
+
+    figure 
+    set(gcf,'DefaultLineLineWidth',lwidth)
+    set(gca,'FontSize',fsize)
+    scatter(b16, b,'*b')
+    xlabel('$\mathbf{b}$')
+	ylabel('$\mathbf{\hat{b}}$')
+    box on
+    
 end 
