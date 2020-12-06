@@ -180,42 +180,24 @@ FV = kscdf(v_bc, 'edf', evalpts);
 
 if simulind == 1
     b = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    N = 2;
+    prob = rand(1000, 10);
+    N = 16;
     
     
     
     for i = 1:1000
         for j = 1:10 
+            idx = find(prob(i, j) == FV);
             
-            while true 
-                rand_number = rand;
-                idx = find(rand_number == FV);
-            
-                if isempty(idx) 
-                    [minValue, closestIdx] = min(abs(FV - rand_number)); 
-                    cost = evalpts(closestIdx);
-                    
-                    if length(FV(closestIdx:end)) < 2 % need at least two points to evaluate integral 
-                        continue 
-                    end 
-                
-                    b(j) = b(j) + cost + ... 
-                        trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^N;
-                else 
-                    cost = mean(evalpts(idx));
-                    
-                    if length(FV(idx(1):end)) < 2 % need at least two points to evaluate integral 
-                        continue 
-                    end 
-                    
-                    b(j) = b(j) + cost + ... 
-                        trapz(evalpts(idx(1):end), 1-FV(idx(1):end)) / (1-prob(i, j))^N;
-                end 
-                
-                break
+            if isempty(idx) 
+                [minValue, closestIdx] = min(abs(FV - prob(i, j))); 
+                cost = evalpts(closestIdx);
+                b(cost + trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^16;
+            else 
+                cost = mean(evalpts(idx));
             end 
+            
+            
         end 
     end 
-    
-    b = b ./ 1000;
 end 

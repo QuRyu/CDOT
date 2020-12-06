@@ -30,10 +30,8 @@ set(0,'defaulttextinterpreter','latex','Defaulttextfontsize',fsize);
 usehardle = 1;
 
 % indicator to turn on plotting
-plotind = 0;
+plotind = 1;
 
-% indicator to turn on simulation
-simulind = 1; 
 
 % choice of kernel---everything else is automated
 kernel = 'triweight';
@@ -69,7 +67,6 @@ data.PercentOfEstimates = data.PercentOfEstimates .* 100;
 
 % parameters 
 v = [];
-bids = [];
 vmin = 999;
 vmax = -999;
 participant_count = unique(data.ParticipantsCount);
@@ -80,10 +77,6 @@ for i = 1:length(participant_count)
     N = participant_count(i); % number of participants
     data_subset = data(data.ParticipantsCount == N, :);
     b = data_subset.PercentOfEstimates;
-    
-    if length(b) < 32
-        continue 
-    end 
     
     bmax = max(b);
     bmin = min(b);
@@ -97,17 +90,16 @@ for i = 1:length(participant_count)
     v_bc = b - (gB_bc)./((1-GB)*(N - 1));
 
     v = vertcat(v, v_bc);
-    bids = vertcat(bids, b);
+    
     
 end 
 
-v_bc = v; 
-
+v_bc = v'; 
 
 % remove inf rows
 inf_idx = find(isinf(v_bc));
 v_bc(inf_idx) = []; 
-bids(inf_idx) = []; 
+data(inf_idx, :) = []; 
 % gB_bc_global(inf_idx) = [];
 
 
@@ -133,7 +125,6 @@ evalpts = linspace(min(v_bc),max(v_bc),neval);
 [fV_bc_right,hv_r] = kspdf_bc(-v_bc,kernel,-evalpts,b0,usehardle);
 vind = find(evalpts >= vmax_bc - hv_r);
 fV_bc(vind) = fV_bc_right(vind);
-
 FV = kscdf(v_bc, 'edf', evalpts);
   
 if plotind == 1
@@ -141,8 +132,8 @@ if plotind == 1
     figure
     set(gcf,'DefaultLineLineWidth',lwidth)
     set(gca,'FontSize',fsize)
-    scatter(v_bc, bids,'.b')
-    xlabel('$\mathbf{\hat{c}}$')
+    scatter(v_bc, data.PercentOfEstimates,'.b')
+    xlabel('$\mathbf{\hat{v}}$')
 	ylabel('$\mathbf{b}$')
     box on
 
@@ -160,8 +151,8 @@ if plotind == 1
     set(gcf,'DefaultLineLineWidth',lwidth)
     set(gca,'FontSize',fsize)
     plot(evalpts,fV_bc)
-	xlabel('$\mathbf{\hat{c}}$')
-	ylabel('$\mathbf{\hat{f}_C(c)}$')
+	xlabel('$\mathbf{\hat{v}}$')
+	ylabel('$\mathbf{\hat{f}_V(v)}$')
 	box on
     
     % valuation distribution
@@ -169,53 +160,9 @@ if plotind == 1
     set(gcf, 'DefaultLineLineWidth', lwidth)
     set(gca, 'FontSize', fsize)
     plot(evalpts, FV)
-    xlabel('$\mathbf{\hat{c}}$')
-    ylabel('$\mathbf{\hat{F}_C(c)}$')
+    xlabel('$\mathbf{\hat{v}}$')
+    ylabel('$\mathbf{\hat{F}_V(v)}$')
     box on
+    
+        
 end
-
-
-evalpts = linspace(min(v_bc), max(v_bc), max(v_bc)-min(v_bc));
-FV = kscdf(v_bc, 'edf', evalpts);
-
-if simulind == 1
-    b = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    N = 2;
-    
-    
-    
-    for i = 1:1000
-        for j = 1:10 
-            
-            while true 
-                rand_number = rand;
-                idx = find(rand_number == FV);
-            
-                if isempty(idx) 
-                    [minValue, closestIdx] = min(abs(FV - rand_number)); 
-                    cost = evalpts(closestIdx);
-                    
-                    if length(FV(closestIdx:end)) < 2 % need at least two points to evaluate integral 
-                        continue 
-                    end 
-                
-                    b(j) = b(j) + cost + ... 
-                        trapz(evalpts(closestIdx:end), 1-FV(closestIdx:end)) / (1-FV(closestIdx))^N;
-                else 
-                    cost = mean(evalpts(idx));
-                    
-                    if length(FV(idx(1):end)) < 2 % need at least two points to evaluate integral 
-                        continue 
-                    end 
-                    
-                    b(j) = b(j) + cost + ... 
-                        trapz(evalpts(idx(1):end), 1-FV(idx(1):end)) / (1-prob(i, j))^N;
-                end 
-                
-                break
-            end 
-        end 
-    end 
-    
-    b = b ./ 1000;
-end 
