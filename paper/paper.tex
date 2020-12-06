@@ -24,7 +24,6 @@
     \large Testing GPV Method in First-Price Reverse Auctions}
 
 \author{Qingbo Liu\\[0.5cm]{\small Advisor: Timothy P. Hubbard}}
-\date{Nov 30, 2020}
 
 % \doublespacing
 \onehalfspacing
@@ -201,7 +200,7 @@ The differential equation characterizes the strategy in sealed-bid first-price
 reverse auction and the solution of it, $s(\cdot)$, gives the equilibrium 
 bidding function as follows \cite{HubbardPaarsch2009}
 \begin{equation}
-    s(c) = b =  c + \frac{\int_c^{\overline{c}} [1 - F(u)] du}{[1 - F(c)]^{n-1}}
+    s(c) = b =  c + \frac{\int_c^{\overline{c}} [1 - F(u)]^{n-1} du}{[1 - F(c)]^{n-1}}
     \label{eqn:BiddingFunction}
 \end{equation}
 
@@ -380,8 +379,8 @@ the range [70, 200].
 reason why the result is so. For the latest version on this section, please 
 see \url{https://github.com/QuRyu/CDOT/blob/main/paper/paper.pdf }} } 
 To test if the estimated cost distribution captures the underlying cost 
-distribution that drives observed bids, I will proceed to the second step 
-of the adapted cross-validation: simulate bids using estimated cost distribution 
+distribution that induces observed bids, I will proceed to validation stage: 
+simulate bids using estimated cost distribution 
 $F_c(\cdot)$ and comparing simulated bids to actual bids. For the test data, 
 I will use an auction from the dataset which has 16 bidders. The data is not used 
 to estimate the cost distribution because the total number of bids with 
@@ -390,25 +389,66 @@ $16$ bidders is less than $32$.
 The simulation technique is known as the inversion method and runs as follows.
 I will draw 16 random numbers uniformly 
 distributed on the range $(0 ,1)$ and use the inverse distribution function, 
-$F_c^{-1}(\cdot)$ to find the corresponding costs. The bids are then computed 
+$F_c^{-1}(\cdot)$, to find the corresponding costs. The bids are then computed 
 using equation (\ref{eqn:BiddingFunction}) and the estimated cost distribution 
 $F_c$. This process is repeated 1000 times and the averages are taken. 
 
-\begin{table}
-    \begin{tabular}{llllll}
-    \hline
-    Normalized Bids     & Mean                    & Median                   & \begin{tabular}[c]{@{}l@{}}Standard\\ Deviation\end{tabular} & Max                           & Min                          \\ \hline
-    Test data           & 91.72\% & 73.11\%       & 0.355\%                  & 178.43\% & 58.74\% \\ \hline
-    Simulated Bids      & $1.487 \cdot 10^{46}\%$   & $1.758 \cdot 10^{38}\%$    & $5.759 \cdot 10^{46}\%$                               & $2.230 \cdot 10^{47}\%$         & $7.811 \cdot 10^{32}\%$        \\ \hline
-    \end{tabular}
-    \caption{Summary Statisticals of test data and simulated dataset}
-    \label{table:2}
-\end{table}
+\begin{figure}
+\centering 
+    \begin{minipage}[h]{0.55\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{simulated_bids.jpg}
+        \caption{Simulated bids against simulated costs.}
+        \label{fig:simulation}
+    \end{minipage}%
+    \begin{minipage}[h]{0.55\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{actualVsimulated.jpg}
+        \caption{Bids from test data (x-axis) plotted 
+        against simulated bids (y-axis).}
+        \label{fig:actualVsimulation}
+    \end{minipage}
+\end{figure}
 
-Table \ref{table:2} summarizes the test data and simulated bids, respectively. The 
-anomaly of the simulated data comes from the fact the 15th power of $1-F_c(c)$, a
-number that is less than 1, is tiny and so $\frac{1}{1-F_c(c)}$ is large,
-inflating the result by an astronomical magnitude.
+Figure \ref{fig:simulation} plos simulated costs against simulated bids that are 
+inferred from simulated costs using equation (\ref{eqn:BiddingFunction}). 
+The simulated costs and bids center around 110\% 
+and the range is small, with the max and min differing by less than 4\%. This 
+is due to the estimated unimodal cost distribution 
+concentrating in the range [80, 200], with the peak around 110\%. 
+With the inversion method repeated for 1000 times, it is natural that 
+the costs and bids fall into the place where most bids and costs are 
+concentrated. With the number of runs curtailed to 100 and 50, as shown in 
+Figure \ref{fig:simulation_run_times}, the bids become more spread out and 
+closer to the bid distribution. This shows that the number of runs is 
+an important factor to determine in roder to have a more accurate simulation 
+but it is outside the scope of this paper. For simplicity, I will keep 
+referencing the data generated with 1000 runs. 
+
+\begin{figure}
+\centering
+    \begin{minipage}[h]{0.5\textwidth}
+        \centering 
+        \includegraphics[width=\linewidth]{100run.jpg}
+    \end{minipage}%
+    \begin{minipage}[h]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{10run.jpg}
+    \end{minipage}
+\caption{Bid simulation run for 100 times (left) and 10 times(right)}
+\label{fig:simulation_run_times}
+\end{figure}
+
+Figure \ref{fig:actualVsimulation} plots test data against simulated bids. 
+A wide difference between simulation and test data is observed here. 
+This difference, however, is not unexpected for two reasons: 
+(1) the test data, which contains an auciton with 16 bidders, does not conform 
+to the the bid distribution depicted in Figure \ref{fig:BidFrequency}, and 
+(2) I am comparing most likely bids predicted by the estimated cost distribution 
+to a particular auction. Therefore, the difference here not suggest the 
+inaccuracy of the estimated cost distribution or the equilibrium model. 
+Instead, this exercise suggests that we may need to increase the sample size 
+to have a more informative comparison. 
 
 
 \section{Conclusion}
