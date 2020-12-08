@@ -116,7 +116,7 @@ be compared to select the fittest one. In this paper, I will adapt the idea
 of cross-validation to test the predictiveness of economic models. By splitting 
 data into training data and test data as in statistical learning, I will 
 run structural estimation on the training data, simulate test data using the 
-results from strucutral estimation, and compare the simulated data to actual 
+results from structural estimation, and compare the simulated data to actual 
 test data. If the difference is statistically significant, that suggests 
 unfitness of the model in the particular environment. 
 In this paper, I will use data from government procurement auctions to test 
@@ -133,7 +133,7 @@ term paper, this goal is omitted. }.
 Similar work has been done in \citeauthor{ChernomazYushioto2019} 
 \citeyear{ChernomazYushioto2019}, where they have compared the accuracy 
 of semiparametric and nonparametric structural estimation methods in an 
-asymetric environment.  
+asymmetric environment.  
 
 The remainder of the paper is organized as follows. Section 2 discusses the 
 characteristics of the environment and derives the model for structural 
@@ -257,7 +257,7 @@ method suffers from boundary
 problem and instead, I will use the boundary-corrected kernel estimation 
 method as proposed in \cite{HickmanHubbard2015}
 
-This two-step estimation method has the advantage that in order to estimate cost 
+This two-step estimation method has the advantage that to estimate cost 
 distribution with observed bids, I do not need to assume a prior distribution 
 of $f(c)$ to estimate it (which is a parametric method that works by 
 first assuming the shape of a distribution and then estimating parameters of the 
@@ -381,7 +381,7 @@ decreases the predictive power of the model.
 
 \section[title]{Simulation} 
 To test if the estimated cost distribution captures the underlying cost 
-distribution that induces observed bids, I will proceed to validation stage: 
+distribution that induces observed bids, I will proceed to the validation stage: 
 simulate bids using estimated cost distribution 
 $F_c(\cdot)$ and comparing simulated bids to actual bids. For the test data, 
 I will use an auction from the dataset which has 16 bidders. The data is not used 
@@ -412,18 +412,18 @@ $F_c$. This process is repeated 1000 times and the averages are taken.
     \end{minipage}
 \end{figure}
 
-Figure \ref{fig:simulation} plos simulated costs against simulated bids that are 
+Figure \ref{fig:simulation} plots simulated costs against simulated bids that are 
 inferred from simulated costs using equation (\ref{eqn:BiddingFunction}). 
 The simulated costs and bids center around 110\% 
 and the range is small, with the max and min differing by less than 4\%. This 
 is due to the estimated unimodal cost distribution 
-concentrating in the range [80, 200], with the peak around 110\%. 
-With the inversion method repeated for 1000 times, it is natural that 
+concentrating in the range [80, 200], with a peak around 110\%. 
+With the inversion method repeated 1000 times, it is natural that 
 the costs and bids fall into the place where most bids and costs are 
 concentrated. With the number of runs curtailed to 100 and 50, as shown in 
 Figure \ref{fig:simulation_run_times}, the bids become more spread out and 
 closer to the bid distribution. This shows that the number of runs is 
-an important factor to determine in roder to have a more accurate simulation 
+an important factor to determine to have a more accurate simulation 
 but it is outside the scope of this paper. For simplicity, I will keep 
 referencing the data generated with 1000 runs. 
 
@@ -444,10 +444,10 @@ referencing the data generated with 1000 runs.
 Figure \ref{fig:actualVsimulation} plots test data against simulated bids. 
 A wide difference between simulation and test data is observed here. 
 This difference, however, is not unexpected for two reasons: 
-(1) the test data, which contains an auciton with 16 bidders, does not conform 
-to the the bid distribution depicted in Figure \ref{fig:BidFrequency}, and 
+(1) the test data, which contains an auction with 16 bidders, does not conform 
+to the bid distribution depicted in Figure \ref{fig:BidFrequency}, and 
 (2) I am comparing most likely bids predicted by the estimated cost distribution 
-to a particular auction. Therefore, the difference here not suggest the 
+to a particular auction. Therefore, the difference here does not suggest the 
 inaccuracy of the estimated cost distribution or the equilibrium model. 
 Instead, this exercise suggests that a larger test dataset is needed 
 to deliver more informative results. 
@@ -462,11 +462,11 @@ cost distribution on the training data using a two-step nonparametric procedure.
 Second, using the 
 estimated cost distribution, the paper then constructs simulated bids with the 
 inversion method and compare the simulation to test data. 
-But the wide difference between the simulation and test data does not suggests
+But the wide difference between the simulation and test data does not suggest
 that the first-price sealed-bid equilibrium model introduced in 
 \citeauthor{RileySamuelson1981} \citeyear{RileySamuelson1981}
 is not a suitable model to predict bidder's 
-behavior in real-world auctions. Instead, to draw a firm concludesion requires 
+behavior in real-world auctions. Instead, to draw a firm conclusion requires 
 more data. 
 
 Moreover, in the second step of the cross-validation procedure, comparing bids 
