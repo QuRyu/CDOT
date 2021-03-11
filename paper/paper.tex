@@ -9,6 +9,7 @@
 \usepackage{apacite}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[toc, page]{appendix}
 
 % \usepackage[
 % backend=biber,
@@ -20,8 +21,8 @@
 \graphicspath{ {./images/}} % Import images 
 
 \title{% 
-    Validate Structural Analysis \\ 
-    \large Testing Equilibrium Model in First-Price Reverse Auctions}
+    Validate Nash-Equilibrium Equilibrium Model 
+    in First-Price Reverse Auctions}
 
 \author{Qingbo Liu\\[0.5cm]{\small Advisor: Timothy P. Hubbard}}
 
@@ -30,17 +31,28 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+    This paper tests the predictive power of Bayes-Nash equilibrium model in 
+    first-price procurement auctions through validation set approach. It 
+    first trains the model on a subset of data using the Guerre-Perrigne-Vuong method 
+    and then generates predictions on validation set using inversion method. 
+    The generated predictions are compared to the actual data from validation set.
+    This paper's result suggests that Bayes-Nash equilibrium model does not 
+    yield accurate predictions but the answer might be more nuanced due to 
+    flaws in the paper's approach. 
+\end{abstract}
+
 \section{Introduction}
 % previous version  
 % Auctions are a price-discovering mechanism in environments where there is no 
 % well established known price for items. Participants at auctions have heterogenous
 % valuations about the items being auctioned. The standard economic assumption is that 
-% bidders draw independent or affalidated valuations before the auction starts and 
+% bidders draw independent or affiliated valuations before the auction starts and 
 % submit their bids as a possibly 
 % non-linear function of their valuations and preferences. At the end, winners 
-% are determined according to certain rules. At the momement the winner is designated, 
+% are determined according to certain rules. At the moment the winner is designated, 
 % a particular objective of the auction mechanism that is employed is achieved, 
-% such as social welfare maximization, revenue maximiaztion, etc. 
+% such as social welfare maximization, revenue maximization, etc. 
 
 % However, there are certain cases where the theory is unlikely to match the reality. 
 % For example, in first-price auctions, the usual economic model on bidders' 
@@ -74,51 +86,71 @@
 
 Participants at auctions submit bids for items based on their valuations and 
 preferences of the items. There are many ways to think about the transformation from 
-valuations and preferences into bids, and the usual economic approach is to consider 
-the bids as a mathematical function of valuations and preferences, an approach which 
-this paper will take. At the end of auctions, the winner(s) 
+valuations and preferences into bids, and one usual economic approach is to consider 
+the bids as a (hopefully not complex) function of valuations and preferences,
+an approach which this paper will take. At the end of auctions, the winner(s) 
 is designated based on certain auction rules and the auction data becomes available.
-The data includes only bids, the final output of the bidding function, and the inputs, 
-valuations and preferences, remain unknown. Yet interesting and useful analysis 
-of auctions entails the knowledge about valuations and preferences. For example, 
-to evaluate the performance of auctions, it is necessary to have access to bidder's 
-valuations to determine if the particular mechanism has achieved its objective,
-which leads to structural estimation. 
+The data includes only bids, the final output of the bidding function, whereas 
+valuations and preferences remain unknown, both of which are inputs to the 
+bidding function. Interesting and useful analysis 
+of auctions would entail additional knowledge about valuations and preferences.
+For example, 
+to compare how well DBE (disadvantaged business enterprise) performs in government 
+procurement relative to other types of business enterprises, besides looking 
+at how much DBE firms bid in auctions, it would also be useful to compare 
+project costs of DBE firms to those of others. As project costs are an unknown,
+to do this essentially means conducting structural estimation on the data.  
 
-Structural estimation assumes a particular model and uses statistical methods to 
+What is structural estimation? 
+Structural estimation gives the ability to extract useful information from 
+data, just like regression analysis. The difference lies in that structural 
+analysis assumes a particular model and uses statistical methods to 
 estimate relevant parameters of the model. The calibrated model can then 
-give predictions regarding objects that are being investigated. For example, 
-in first-price sealed-bid reverse auctions, 
-one of the mechanisms that the government uses for public project procurements, 
-the simple assumption is that all participants independently draw costs from an 
-identical cost distribution. 
-Each bidder submits a sealed bid to the auctioneer and after all bidders have finished 
-submission the winner is the one with the lowest bid. With this bidding model, 
-structural estimation can be used 
-to infer the cost distribution based on observed bids \cite{Guerreetal2000}.
-Compared to regression analysis, structural estimation imposes a stringer set of 
-assumptions on the data. But more than just discovering the correlation between 
-variables as regression analysis does, structural estimation is able to produce stronger 
-counter-factual predictions, such as the cost distribution as mentioned above. 
+generate predictions on objects of interest. For example, 
+in first-price sealed-bid government procurement auctions, where 
+the bidders who bids the lowest wins,
+one way to do structural analysis is assuming that bidders draw their costs 
+independently and use the same bidding function to make bids. 
+By reverse engineering the bidding function, structural analysis 
+can be used to infer the cost distribution from bids \cite{Guerreetal2000}. 
+On the other hand, compared to regression analysis, 
+structural estimation imposes a stronger set of 
+assumptions on the data. These additional assumptions enable 
+structural estimation to be able to produce 
+counter-factual predictions that are not discoverable under 
+regression analysis. 
 
+Yet assumptions structural estimation impose on data also come at a cost.
 The central assumption underlying structural estimation is that the model used 
-is correct in a particular environment. To overcome such a drawback, alternative 
-studies such as lab experiments are used to confirm the theory's validity. But 
-laboratory environments ultimately differ from the real environments and 
-the conclusions from laboratory studies may not hold in more realistic environments. 
+is correct in a particular environment of interest. 
+But it is usually difficult to assess the model's fit in such environments. 
+To overcome such a drawback, alternative 
+studies such as lab experiments are used to confirm the theory's validity. 
+Even though laboratory studies try to simulate real environments as much 
+as possible, laboratory environments ultimately differ from those in real life 
+and so the conclusions drawn from lab experiments do not necessarily hold true.
+
 The goal of this paper is to test model validity in a new different way by 
-borrowing the techniques from statistical learning literature. In statistical 
-learning, multiple models for predictive purposes are trained on part of the dataset 
-and their performance is evaluated on another reserved split of 
-the available dataset. The technique is called cross-validation 
-and is used when there are candidate models and their performance needs to 
-be compared to select the fittest one. In this paper, I will adapt the idea 
-of cross-validation to test the predictiveness of economic models. By splitting 
-data into training data and test data as in statistical learning, I will 
-run structural estimation on the training data, simulate test data using the 
-results from structural estimation, and compare the simulated data to actual 
-test data. If the difference is statistically significant, that suggests 
-unfitness of the model in the particular environment. 
+borrowing techniques from statistical learning literature. In the 
+prediction branch of statistical learning, a common 
+technique to evaluate a model's performance is by training the model 
+on a dedicated training set that is a subset of the available dataset and then 
+tests the model's prediction on the validation set that is independent from the 
+training set.  
+In this paper, I will adapt the idea 
+of validation set approach to investigate how well the equilibrium model 
+performs in first-price procurement auctions. Specifically, I will 
+split bidding data into training data and test data as in statistical learning.
+Then I will 
+run structural estimation on the training data, simulate test data using 
+inversion method, and compare the simulated data to actual 
+test data. If the difference is statistically insignificant, that suggests 
+fitness of the model in the particular environment. 
+Similar work has been done in \citeauthor{ChernomazYushioto2019} 
+\citeyear{ChernomazYushioto2019}, where they have compared the accuracy 
+of semiparametric and nonparametric structural estimation methods in an 
+asymmetric environment.  
+
 In this paper, I will use data from government procurement auctions to test 
 the first-price sealed-bid equilibrium model \cite{RileySamuelson1981} 
 for structural estimation
@@ -129,11 +161,6 @@ to the existing literature on understanding how DBE/MBE/WBE perform relative
 to other firms. But due to data availability on these types of firms 
 and time constraints on the project as this is a 
 term paper, this goal is omitted. }.
-
-Similar work has been done in \citeauthor{ChernomazYushioto2019} 
-\citeyear{ChernomazYushioto2019}, where they have compared the accuracy 
-of semiparametric and nonparametric structural estimation methods in an 
-asymmetric environment.  
 
 The remainder of the paper is organized as follows. Section 2 discusses the 
 characteristics of the environment and derives the model for structural 
@@ -153,23 +180,23 @@ All bidders are quasi-linear utility-maximizers, with the utility function
 $u(c, b) = b - c$. Bidders are therefore assumed to be risk-neutral. 
 The number of bidders $n$, the cost distribution $F$ and its support are common 
 knowledge to all bidders in the auction. Besides, each bidder $i$ can only observe her 
-private cost $c_i$ and no one else's. 
+private cost $c_i$. 
 
-Different from first-price sealed-bid auctions where 
-the highest bidder wins, in first-price sealed-bid reverse 
-auctions the winner is the one who submits the 
+The paper focuses on the environment of first-price sealed-bid (FPSB) procurement 
+auctions where the winner is the one who submits the 
 lowest bid. In the following subsection, I will derive the 
 Bayes-Nash Equilibrium in the FPSB reverse auction environment.
-After I have characterized the equilibrium, now I will proceed to describe how 
-private costs can be inferred from observed bids based on the equilibrium. 
+After I have characterized the equilibrium, I will proceed to describe how 
+private costs can be inferred from observed bids with the assumption 
+that players are following equilibrium strategy. 
 
 \subsection{Bayes-Nash Equilibrium}
-For bidder $i$ in the auction, she needs to report a bid $b_i$ based on 
+For bidder $i$ in the procurement auction, she needs to report a bid $b_i$ based on 
 her private cost $c_i$. The bidder achieves maximal utility 
 by maximizing the function 
 $$ \max_{b_i} (b_i - c_i)P(\text{win}|b_i), $$ 
 which is saying by picking an appropriate bid $b_i$, the bidder 
-has a good balance between the revenue and probability of winning. 
+has a good balance between the revenue ($b_i - c_i$) and probability of winning. 
 
 Since this is a first-price reverse auction, where the lowest bidder wins, 
 the probability of winning is 
@@ -194,7 +221,7 @@ from the same distribution.
 
 The objective function therefore becomes 
 $$ \max_{b_i} (b_i - c_i)[1-F(s^{-1}(b_i))]^{n-1}$$ 
-and setting the derivative of it with respect to $b_i$ equal to 0 yields
+and taking the first-order condition with respect to $b_i$ yields
 \begin{align}
     [1-F(s^{-1}(b_i))]^{n-1} &= (b_i -c_i)(n-1)[1-F(s^{-1}(b_i))]^{n-2}f(s^{-1}(b_i))\frac{d s^{-1}(b_i)}{d b_i} \nonumber \\
     [1-F(c_i)]^{n-1} &= (s(c_i) -c_i)(n-1)[1-F(c_i)]^{n-2}f(c_i)\frac{1}{s'(c_i)} \nonumber \\
@@ -213,7 +240,7 @@ bidding function as follows \cite{HubbardPaarsch2009}
 \subsection{Cost Inference}
 Our interest, however, lies not in the particular solution 
 of this differential equation, but in using it as an intermediate step 
-in deriving cost as a function of bids, i.e. $s^{-1}(\cdot)$.
+to derive cost as a function of bids, $s^{-1}(\cdot)$.
 
 Assume $G(\cdot)$ represents the cumulative distribution of bids, 
 along with the continuous density function $g(\cdot)$ and support 
@@ -235,9 +262,9 @@ strategy.
 
 \subsection{Estimation}
 The estimation consists of two steps. In step 1, I recover costs $c$ based on 
-observed bids $b$, by first non-parametrically estimating $G(b)$ and $g(b)$ 
-and then using equation (\ref{eqn:ReverseFunction}) to 
-generate pseudo-costs. In the second step, I can non-parametrically estimate the cost
+observed bids $b$, by non-parametrically estimating $G(b)$ and $g(b)$ 
+and using equation (\ref{eqn:ReverseFunction}) to 
+generate pseudo-costs. In step 2, I can then estimate the cost
 density $f(c)$ from pseudo-costs. 
 
 The technique used to estimate $G(b)$ and $g(b)$, as well as $f(c)$, is called 
@@ -251,17 +278,19 @@ and
     \hat{F}(x) = \frac{1}{n}\sum_{i=1}^n I(x_i \leq x), 
     \label{eqn:KDE_F}
 \end{equation}
-where I have a set of observables ${x_1, x_2, ... x_n}$. However, this  
+where ${x_1, x_2, ... x_n}$ are the set of observed values. However, this  
 kernel density estimation (\ref{eqn:KDE_f}) 
 method suffers from boundary 
-problem and instead, I will use the boundary-corrected kernel estimation 
+problem: when the estimator is near the boundary values, the estimate 
+will be downward biased. 
+Instead, I will use the boundary-corrected kernel estimation 
 method as proposed in \cite{HickmanHubbard2015}
 
-This two-step estimation method has the advantage that to estimate cost 
-distribution with observed bids, I do not need to assume a prior distribution 
-of $f(c)$ to estimate it (which is a parametric method that works by 
+This two-step non-parametric estimation method has the advantage that to estimate cost 
+distribution from observed bids, I do not need to assume a prior distribution 
+of $f(c)$, whereas a parametric method works by 
 first assuming the shape of a distribution and then estimating parameters of the 
-distribution from data). 
+distribution from data. This helps avoid implications brought by assumed distributions. 
 
 
 \section{Data and Results}
@@ -383,17 +412,15 @@ decreases the predictive power of the model.
 To test if the estimated cost distribution captures the underlying cost 
 distribution that induces observed bids, I will proceed to the validation stage: 
 simulate bids using estimated cost distribution 
-$F_c(\cdot)$ and comparing simulated bids to actual bids. For the test data, 
-I will use an auction from the dataset which has 16 bidders. The data is not used 
-to estimate the cost distribution because the total number of bids with 
-$16$ bidders is less than $32$. 
+$F_c(\cdot)$ and comparing simulated bids to actual bids. 
+The validation data comes form an auction with 16 bidders.
 
 The simulation technique is known as the inversion method and runs as follows.
 I will draw 16 random numbers uniformly 
 distributed on the range $(0 ,1)$ and use the inverse distribution function, 
 $F_c^{-1}(\cdot)$, to find the corresponding costs. The bids are then computed 
 using equation (\ref{eqn:BiddingFunction}) and the estimated cost distribution 
-$F_c$. This process is repeated 1000 times and the averages are taken. 
+$F_c$. This process is repeated 1000 times and the averages of each bid are taken. 
 
 \begin{figure}
 \centering 
@@ -423,8 +450,9 @@ the costs and bids fall into the place where most bids and costs are
 concentrated. With the number of runs curtailed to 100 and 50, as shown in 
 Figure \ref{fig:simulation_run_times}, the bids become more spread out and 
 closer to the bid distribution. This shows that the number of runs is 
-an important factor to determine to have a more accurate simulation 
-but it is outside the scope of this paper. For simplicity, I will keep 
+an important factor to determine in order to have a more accurate simulation.
+But determining the best number of runs is outside the scope of this paper.  
+For the rest of this paper, I will keep 
 referencing the data generated with 1000 runs. 
 
 \begin{figure}
@@ -444,44 +472,46 @@ referencing the data generated with 1000 runs.
 Figure \ref{fig:actualVsimulation} plots test data against simulated bids. 
 A wide difference between simulation and test data is observed here. 
 This difference, however, is not unexpected for two reasons: 
-(1) the test data, which contains an auction with 16 bidders, does not conform 
+(1) the validation data, which contains an auction with 16 bidders, does not conform 
 to the bid distribution depicted in Figure \ref{fig:BidFrequency}, and 
 (2) I am comparing most likely bids predicted by the estimated cost distribution 
 to a particular auction. Therefore, the difference here does not suggest the 
 inaccuracy of the estimated cost distribution or the equilibrium model. 
 Instead, this exercise suggests that a larger test dataset is needed 
-to deliver more informative results. 
+to deliver more informative results and raises the need for a better 
+way to compare simulation data to validation data. 
 
 \section{Conclusion}
-This paper tries to propose a way to validate models used in structural analysis 
-by cross-validation. The dataset is split into training data and test 
-data.
-First, this paper conducts structural estimation on a government 
-procurement auction dataset about highway constructions and estimates the 
-cost distribution on the training data using a two-step nonparametric procedure.
+This paper tries to propose a way to test economics models by validation set approach. 
+It splits a government 
+procurement auction dataset about highway constructions into training set and 
+validation set. Then it estimates the 
+cost distribution from training data assuming Bayes-Nash equilibrium model. 
 Second, using the 
-estimated cost distribution, the paper then constructs simulated bids with the 
+estimated cost distribution, it constructs simulated bids with the 
 inversion method and compare the simulation to test data. 
-But the wide difference between the simulation and test data does not suggest
+Even though the wide difference between the simulation and test data suggests
 that the first-price sealed-bid equilibrium model introduced in 
 \citeauthor{RileySamuelson1981} \citeyear{RileySamuelson1981}
-is not a suitable model to predict bidder's 
-behavior in real-world auctions. Instead, to draw a firm conclusion requires 
-more data. 
-
-Moreover, in the second step of the cross-validation procedure, comparing bids 
+may be not an accurate model to predict bidder's 
+behavior in such environment, the flaws in this paper's experiment design 
+demand further investigation before any firm conclusion can be drawn. 
+For example, 
+in the second step of the cross-validation procedure, comparing bids 
 directly to test theory's validity may not be a good idea, as suggested in 
 \citeauthor{Harrison1989} \citeyear{Harrison1989}. \citeauthor{Harrison1989}
 \citeyear{Harrison1989} instead proposes to "evaluate subject behavior in the 
 expected payoff space", which can be incorporated into future work of the project.
 
-The idea of cross-validation has been an old idea in the machine learning 
-literature as a way to compare performance across models. I, therefore, consider 
-it a natural idea to introduce it into structural analysis. Structural estimation 
-relies on the model's correctness in modeling agent's behavior, but the verification 
-of models is left to lab experiments, not empirical data which holds the final 
-authority on models. Hopefully, this paper's experiment would shed light on 
-possible directions that structural analysis can head to become more robust. 
+The practice of using validation set to verify model's performance
+has been standard in the statistical learning 
+literature. I consider 
+it a natural extension to introduce it into the economics field as a way to 
+test how models match reality. As Structural estimation 
+relies on the model's correctly modeling agent's behavior,
+I hope the introduction of validation set approach would help with model 
+verification besides lab experiments and would help structural estimation 
+becomes more robust. 
 
 
 \medskip
@@ -489,5 +519,9 @@ possible directions that structural analysis can head to become more robust.
 \bibliographystyle{apacite}
 \bibliography{references}
 
+\pagebreak
+\begin{appendices}
+    Please refer to \url{https://github.com/QuRyu/CDOT/tree/main/Extensions} for code.
+\end{appendices}
 
 \end{document}
