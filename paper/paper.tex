@@ -21,10 +21,13 @@
 \graphicspath{ {./images/}} % Import images 
 
 \title{% 
-    Validate Nash-Equilibrium Equilibrium Model 
-    in First-Price Reverse Auctions}
+    Validate Bayes-Nash Equilibrium Model 
+    in First-Price Reverse Auctions 
+    \footnote{ All code and data are located at
+    \url{https://github.com/QuRyu/CDOT/} }}
 
 \author{Qingbo Liu\\[0.5cm]{\small Advisor: Timothy P. Hubbard}}
+\date{\vspace{-5ex}}
 
 % \doublespacing
 \onehalfspacing
@@ -34,10 +37,11 @@
 \begin{abstract}
     This paper tests the predictive power of Bayes-Nash equilibrium model in 
     first-price procurement auctions through validation set approach. It 
-    first trains the model on a subset of data using the Guerre-Perrigne-Vuong method 
+    estimates the equilibrium model on a subset of data using the 
+    Guerre-Perrigne-Vuong method 
     and then generates predictions on validation set using inversion method. 
-    The generated predictions are compared to the actual data from validation set.
-    This paper's result suggests that Bayes-Nash equilibrium model does not 
+    The generated predictions are compared to validation set.
+    The result suggests that Bayes-Nash equilibrium model might not 
     yield accurate predictions but the answer might be more nuanced due to 
     flaws in the paper's approach. 
 \end{abstract}
@@ -471,15 +475,17 @@ referencing the data generated with 1000 runs.
 
 Figure \ref{fig:actualVsimulation} plots test data against simulated bids. 
 A wide difference between simulation and test data is observed here. 
-This difference, however, is not unexpected for two reasons: 
-(1) the validation data, which contains an auction with 16 bidders, does not conform 
-to the bid distribution depicted in Figure \ref{fig:BidFrequency}, and 
-(2) I am comparing most likely bids predicted by the estimated cost distribution 
-to a particular auction. Therefore, the difference here does not suggest the 
-inaccuracy of the estimated cost distribution or the equilibrium model. 
-Instead, this exercise suggests that a larger test dataset is needed 
-to deliver more informative results and raises the need for a better 
-way to compare simulation data to validation data. 
+This difference, however, is not unexpected. 
+The validation data, which contains an auction with 16 bidders, does not conform 
+to the bid distribution depicted in Figure \ref{fig:BidFrequency}. 
+The calibrated model has only learnt information from the training data and 
+so can only make predictions from what it already knows. This might imply that 
+equilibrium model adopted in this paper is not robust to new data. 
+To derive more meaningful comparisons, I need to augment the size of validation set.
+For example, 80\% of available data should be used for training and 20\% of 
+data for validation. 
+However, due to time limit that this term paper imposes, I have not proceeded 
+further. 
 
 \section{Conclusion}
 This paper tries to propose a way to test economics models by validation set approach. 
@@ -518,10 +524,5 @@ becomes more robust.
 
 \bibliographystyle{apacite}
 \bibliography{references}
-
-\pagebreak
-\begin{appendices}
-    Please refer to \url{https://github.com/QuRyu/CDOT/tree/main/Extensions} for code.
-\end{appendices}
 
 \end{document}
